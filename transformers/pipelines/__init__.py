@@ -44,19 +44,6 @@ TASK_ALIASES = {
 }
 SUPPORTED_TASKS = {
     
-    "text-classification": {
-        "impl": TextClassificationPipeline,
-        "tf": (TFAutoModelForSequenceClassification,) if is_tf_available() else (),
-        "pt": (AutoModelForSequenceClassification,) if is_torch_available() else (),
-        "default": {
-            "model": {
-                "pt": "distilbert-base-uncased-finetuned-sst-2-english",
-                "tf": "distilbert-base-uncased-finetuned-sst-2-english",
-            },
-        },
-        "type": "text",
-    },
-    
     "summarization": {
         "impl": SummarizationPipeline,
         "tf": (TFAutoModelForSeq2SeqLM,) if is_tf_available() else (),
