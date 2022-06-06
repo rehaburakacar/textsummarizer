@@ -27,7 +27,6 @@ __version__ = "4.18.0"
 from typing import TYPE_CHECKING
 
 # Check the dependencies satisfy the minimal versions required.
-from . import dependency_versions_check
 from .utils import (
     _LazyModule,
     is_flax_available,
