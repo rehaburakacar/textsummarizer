@@ -2,6 +2,7 @@ from transformers import pipeline
 import os
 import tensorflow as tf
 import tkinter as tk
+import language_tool_python 
 from tkinter import filedialog, Text
 # from pdf import PdfFileReader
 import textract
@@ -11,6 +12,45 @@ import speech_recognition as sr
 import os 
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
+translator = Translator()
+
+
+def makeMeaningful(my_text):
+    my_tool = language_tool_python.LanguageTool('en-US')
+    # given text      
+    # getting the matches  
+    my_matches = my_tool.check(my_text)  
+    
+    # defining some variables  
+    myMistakes = []  
+    myCorrections = []  
+    startPositions = []  
+    endPositions = []  
+    
+    # using the for-loop  
+    for rules in my_matches:  
+        if len(rules.replacements) > 0:  
+            startPositions.append(rules.offset)  
+            endPositions.append(rules.errorLength + rules.offset)  
+            myMistakes.append(my_text[rules.offset : rules.errorLength + rules.offset])  
+            myCorrections.append(rules.replacements[0])  
+    
+    # creating new object  
+    my_NewText = list(my_text)   
+    
+    # rewriting the correct passage  
+    for n in range(len(startPositions)):  
+        for i in range(len(my_text)):  
+            my_NewText[startPositions[n]] = myCorrections[n]  
+            if (i > startPositions[n] and i < endPositions[n]):  
+                my_NewText[i] = ""  
+    
+    my_NewText = "".join(my_NewText)  
+    
+    # printing the text
+
+    print(my_NewText)
+    return my_NewText 
 
 # create a speech recognition object
 r = sr.Recognizer()
@@ -57,8 +97,8 @@ def get_large_audio_transcription(path):
                 print(chunk_filename, ":", text)
                 whole_text += text
     # return the text for all chunks detected
+
     return whole_text
-translator = Translator()
 
 
 ## Setting to use the 0th GPU
@@ -100,8 +140,7 @@ def summarizeTexts(text):
     label = tk.Label(frame2, text=summary_text, wraplength=500)
     label.pack()
 
-summarizeText = tk.Button(root, text="Summarize Text", padx=10, pady=5, fg="white", bg="#263D42", command=summarizeTexts)
-summarizeText.pack()
+
 
 app = [] 
 
@@ -122,6 +161,9 @@ def summarizeFromPDF():
     # first_page = PDF_read.getPage(0)
     # print(first_page.extractText())
     str1 = PDF_read.decode('UTF-8')
+    print("LANOFLAN", translator.detect(str1).lang)
+    if (translator.detect(str1).lang == "en"): 
+        str1 = makeMeaningful(str1)
     #print("TEXT:", str1)
     label = tk.Label(frame, text=str1, wraplength=500)
     label.pack()  
