@@ -1,12 +1,10 @@
 from transformers import pipeline
 import os
-import tensorflow as tf
 import tkinter as tk
 import language_tool_python 
-from tkinter import filedialog, Text
+from tkinter import filedialog
 # from pdf import PdfFileReader
 import textract
-import googletrans
 from googletrans import Translator
 import speech_recognition as sr 
 import os 
@@ -127,16 +125,9 @@ frame2.place(relwidth=0.8, relheight=0.3, relx = 0.1, rely = 0.5)
 def summarizeTexts(text): 
     for widget in frame2.winfo_children():
         widget.destroy()
-    #print("typeof1", type(text))
-    #print("Translated text:", translator.translate(text, dest='en'))
-    #print("TYPEOFOBJECT", type(text))
     text = translator.translate(text, dest='en').text
-    #print("INCOMING TEXT:", text)
     summary_text = summarizer(text, max_length=120000000000, min_length=5, do_sample=False)[0]['summary_text']
-    #print("SUMMARIZED TEXT", summary_text)
     summary_text = translator.translate(summary_text, dest='tr').text
-    #print("summarized text", summary_text)
-    #print(tf.__version__)
     label = tk.Label(frame2, text=summary_text, wraplength=500)
     label.pack()
 
@@ -149,25 +140,16 @@ def summarizeFromPDF():
         widget.destroy()
     filename = filedialog.askopenfilename(initialdir="/", title="Select File", 
     filetypes=(("DOCX", "*.DOCX"), ("all files", "*.DOCX*")))
-    #print (filename)
-    #apps.append(filename)
-    #print(filename)
     PDF_read = textract.process(filename, extension='docx', encoding='utf-8')
     for app in apps: 
         label = tk.Label(frame, text=app)
         label.pack()
-    # temp = open(filename, 'rb')
-    # PDF_read = PDFFileReader(temp)
-    # first_page = PDF_read.getPage(0)
-    # print(first_page.extractText())
     str1 = PDF_read.decode('UTF-8')
     print("LANOFLAN", translator.detect(str1).lang)
     if (translator.detect(str1).lang == "en"): 
         str1 = makeMeaningful(str1)
-    #print("TEXT:", str1)
     label = tk.Label(frame, text=str1, wraplength=500)
     label.pack()  
-    #print("typeofobject", str1)
     summarizeTexts(str1)
 
 def summarizeFromAudio():
@@ -175,9 +157,6 @@ def summarizeFromAudio():
             widget.destroy()
         filename = filedialog.askopenfilename(initialdir="/", title="Select File", 
         filetypes=(("WAV", "*.wav"), ("all files", "*.wav*")))
-        #print (filename)
-        #apps.append(filename)
-        #print(filename)
         print("FILENAME IS THAT", filename)
         Audio_read = get_large_audio_transcription(filename)
         print("AUDIO", Audio_read)
@@ -185,18 +164,8 @@ def summarizeFromAudio():
         for app in apps: 
             label = tk.Label(frame, text=app)
             label.pack()
-        # temp = open(filename, 'rb')
-        # PDF_read = PDFFileReader(temp)
-        # first_page = PDF_read.getPage(0)
-        # print(first_page.extractText())
-        #str1 = Audio_read.decode('UTF-8')
-        #print("TEXT:", str1)
-
         label = tk.Label(frame, text=Audio_read, wraplength=500)
         label.pack()  
-
-        #print("typeofobject", str1)
-
         summarizeTexts(Audio_read)
 
 summarizeTextFromPDF = tk.Button(root, text="Summarize Text From DOCX", padx=10, pady=5, fg="white", bg="#263D42", command=summarizeFromPDF)
