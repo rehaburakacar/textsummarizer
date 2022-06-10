@@ -192,15 +192,15 @@ def summarizeFromPDF():
     #print("COUTN", count)
     summarized = ""
     i = 0 
-    end = 70
+    end = 95
     slice = str1.split()
     #print("TYPE", type(len(slice)))
     lenofwords = len(slice)
 
-    count = int(lenofwords/70)
-    mod = lenofwords % 70
-    for x in range(0, count):
-        temp = slice[i:end+mod]
+    count = int(lenofwords/95)
+    mod = lenofwords % 95
+    for x in range(0, count+1):
+        temp = slice[i:end]
         tempText = ""
         control = ""
         #print("TEMP", temp)
@@ -213,8 +213,8 @@ def summarizeFromPDF():
         print("CONTROL", control)
         summarized = summarized + summarizeTexts(tempText)
         print("SUMMARYCHECK", summarizeTexts(tempText))
-        i += 70
-        end += 70
+        i += 95
+        end += 95
         x += 1
     #print("FINAL SUMMARIZATION")
     #print("LANOFLAN", translator.detect(str1).lang)
