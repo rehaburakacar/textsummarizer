@@ -59,13 +59,13 @@ def makeChunksAndExecute(text):
     print("TEXT", text)
     summarized = ""
     i = 0 
-    end = 95
+    end = 90
     slice = text.split()
     #print("TYPE", type(len(slice)))
     lenofwords = len(slice)
 
-    count = int(lenofwords/95)
-    mod = lenofwords % 95
+    count = int(lenofwords/90)
+    mod = lenofwords % 90
     for x in range(0, count+1):
         temp = slice[i:end]
         tempText = ""
@@ -80,8 +80,8 @@ def makeChunksAndExecute(text):
         #print("CONTROL", control)
         summarized = summarized + summarizeTexts(tempText)
         #print("SUMMARYCHECK", summarizeTexts(tempText))
-        i += 95
-        end += 95
+        i += 90
+        end += 90
         x += 1
     return summarized
 
