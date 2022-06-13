@@ -55,6 +55,36 @@ save_img_menu.grid(columnspan=3, rowspan=1, row=3)
 # summarizeTextFromAudio.pack()
 
 
+def makeChunksAndExecute(text):
+    print("TEXT", text)
+    summarized = ""
+    i = 0 
+    end = 95
+    slice = text.split()
+    #print("TYPE", type(len(slice)))
+    lenofwords = len(slice)
+
+    count = int(lenofwords/95)
+    mod = lenofwords % 95
+    for x in range(0, count+1):
+        temp = slice[i:end]
+        tempText = ""
+        control = ""
+        #print("TEMP", temp)
+        for x in range(0, len(temp)):
+            control += temp[x] + " "
+            #print("SLICED", temp[x])
+            tempText += temp[x] + " "
+            x+=1
+        #print("TEMPED", tempText)
+        #print("CONTROL", control)
+        summarized = summarized + summarizeTexts(tempText)
+        #print("SUMMARYCHECK", summarizeTexts(tempText))
+        i += 95
+        end += 95
+        x += 1
+    return summarized
+
 def makeMeaningful(my_text):
     my_tool = language_tool_python.LanguageTool('en-US')
     # given text      
@@ -190,34 +220,9 @@ def summarizeFromPDF():
     #print("LENOFSTRINFG", len(str1))
     #count = int(len(str1) / 300)
     #print("COUTN", count)
-    summarized = ""
-    i = 0 
-    end = 95
-    slice = str1.split()
-    #print("TYPE", type(len(slice)))
-    lenofwords = len(slice)
-
-    count = int(lenofwords/95)
-    mod = lenofwords % 95
-    for x in range(0, count+1):
-        temp = slice[i:end]
-        tempText = ""
-        control = ""
-        #print("TEMP", temp)
-        for x in range(0, len(temp)):
-            control += temp[x] + " "
-            #print("SLICED", temp[x])
-            tempText += temp[x] + " "
-            x+=1
-        #print("TEMPED", tempText)
-        print("CONTROL", control)
-        summarized = summarized + summarizeTexts(tempText)
-        print("SUMMARYCHECK", summarizeTexts(tempText))
-        i += 95
-        end += 95
-        x += 1
     #print("FINAL SUMMARIZATION")
     #print("LANOFLAN", translator.detect(str1).lang)
+    summarized = makeChunksAndExecute(str1)
     label = tk.Label(frame, text=str1, wraplength=800,  fg="white", bg= "#52adc8")
     label.pack()
     label = tk.Label(frame2, text=summarized, wraplength=800,  fg="white", bg= "#52adc8")
@@ -235,9 +240,12 @@ def summarizeFromAudio():
         for app in apps: 
             label = tk.Label(frame, text=app)
             label.pack()
-        label = tk.Label(frame, text=Audio_read, wraplength=500)
+        label = tk.Label(frame, text=Audio_read,  wraplength=800,  fg="white", bg= "#52adc8")
         label.pack()  
-        summarizeTexts(Audio_read)
+        summarized = makeChunksAndExecute(Audio_read)
+        label = tk.Label(frame2, text=summarized, wraplength=800,  fg="white", bg= "#52adc8")
+        label.pack()
+
 
 
 copyText_btn = Button(root, text="Summarize From DOCX", font=("shanti", 10), height=1, width=20, command=summarizeFromPDF, bg="#55c39e", fg="white")
