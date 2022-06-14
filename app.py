@@ -16,6 +16,7 @@ translator = Translator()
 
 root = Tk()
 root.geometry('+%d+%d'%(350,10)) #place GUI at x=350, y=10
+root.title("Text Summarizer")
 
 header = Frame(root, width=1000, height=450, bg="#52adc8")
 header.grid(columnspan=3, rowspan=2, row=0)
@@ -137,11 +138,8 @@ def get_large_audio_transcription(path):
 ## Setting to use the 0th GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-## Setting to use the bart-large-cnn model for summarization
-summarizer = pipeline("summarization")
-
 ## To use the t5-base model for summarization:
-## summarizer = pipeline("summarization", model="t5-base", tokenizer="t5-ba
+summarizer = pipeline("summarization", model="t5-large", tokenizer="t5-large")
 apps = []
 
 
